@@ -2,13 +2,13 @@ import { galleryItems } from './gallery-items.js';
 // Change code below this line
 // Variables
 const galleryEl = document.querySelector('.gallery');
-// Run functions
 const markupGallery = createGalleryItemsMarkup(galleryItems);
 galleryEl.insertAdjacentHTML("beforeend", markupGallery);
+// Run functions
 // Listeners
 galleryEl.addEventListener('click', targetClickHandler);
 // Functions
-// 2. Event delegation to div.gallery. Get a large-image url.
+// 2. Event delegation to 'div.gallery'. Get a large-image url.
 // 4. Open Modal by ckick on the IMG
 // *instance basicLightbox demo
 // basicLightbox.create(`
@@ -20,23 +20,18 @@ function targetClickHandler(event) {
     if (event.target.tagName !== 'IMG') return;  // check: image clicked?
     const dataSource = event.target.dataset.source;
     const imgModal = basicLightbox.create(
-        `<img src='${dataSource}'>`
-    ).show();
-// Optional. Add closing the Modal after clicking Escape. Listening takes place only when the Modal is open. *Instance basicLightbox - instance.close().
-    document.addEventListener('keydown', targetKeyHandler);
+        `<img src='${dataSource}'>`, {onShow: () => {document.addEventListener('keydown', targetKeyHandler)}, onClose: () => {document.removeEventListener('keydown', targetKeyHandler)}}
+    );
+    imgModal.show();
+    // Optional. Add closing the Modal after clicking Escape. Listening takes place only when the Modal is open. 
+    // * Instance basicLightbox: instance.close(), onShow(), onClose().
     function targetKeyHandler(event) {
-        // console.log(event);
-        // console.log(event.code);
-    if (event.code === 'Escape') {
-        // imgModal.close();
-        // onShow: (imgModal) => console.log('onShow', imgModal);
-        // onClose: (imgModal);
-    //     basicLightbox.create(imgModal, {
-	// 	onClose: () => false
-	// }).show()
+        console.log(imgModal);
+        if (event.code === 'Escape') {
+        imgModal.close(); 
+        }
+        }
     }
-    }
-}
 // 1. Create & render markup
 function createGalleryItemsMarkup(items) {
     const galleryItemsMarkup = items.map(({ preview, original, description }) => `<div class='gallery__item'>
@@ -50,8 +45,6 @@ function createGalleryItemsMarkup(items) {
             </a>
         </div>`
     ).join('');
-    console.log(galleryItemsMarkup);
+    // console.log(galleryItemsMarkup);
     return galleryItemsMarkup;
-}  
-// console.log(galleryItems);
-
+}
